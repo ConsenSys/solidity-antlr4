@@ -62,7 +62,7 @@ natSpec
   : NatSpecSingleLineComment | NatSpecMultilineComment ;
 
 contractDefinition
-  : 'abstract'? ( 'contract' | 'interface' | 'library' ) identifier
+  : natSpec? 'abstract'? ( 'contract' | 'interface' | 'library' ) identifier
     ( 'is' inheritanceSpecifier (',' inheritanceSpecifier )* )?
     '{' contractPart* '}' ;
 
@@ -97,7 +97,7 @@ modifierInvocation
   : identifier ( '(' expressionList? ')' )? ;
 
 functionDefinition
-  : functionDescriptor parameterList modifierList returnParameters? ( ';' | block ) ;
+  : natSpec? functionDescriptor parameterList modifierList returnParameters? ( ';' | block ) ;
 
 functionDescriptor
   : 'function' identifier?
@@ -113,7 +113,7 @@ modifierList
     | PublicKeyword | InternalKeyword | PrivateKeyword | VirtualKeyword | overrideSpecifier )* ;
 
 eventDefinition
-  : 'event' identifier eventParameterList AnonymousKeyword? ';' ;
+  : natSpec? 'event' identifier eventParameterList AnonymousKeyword? ';' ;
 
 enumValue
   : identifier ;
