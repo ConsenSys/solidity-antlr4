@@ -33,6 +33,34 @@ importDirective
   | 'import' ('*' | identifier) ('as' identifier)? 'from' StringLiteralFragment ';'
   | 'import' '{' importDeclaration ( ',' importDeclaration )* '}' 'from' StringLiteralFragment ';' ;
 
+fragment
+NatSpecKeyword
+  : '@'
+  ( 'title'
+  | 'author'
+  | 'notice'
+  | 'dev'
+  | 'param'
+  | 'return'
+  ) ;
+
+fragment
+NatSpecLineBreak
+  : [\r\n]? ;
+
+fragment
+NatSpecLineSpace
+  : [ \t*]* ;
+
+NatSpecSingleLineComment
+  : (NatSpecLineSpace '///' ~[\r\n]* [\r\n]?) + ;
+
+NatSpecMultilineComment
+  : '/**' NatSpecLineBreak (NatSpecLineSpace NatSpecKeyword .+? NatSpecLineBreak)* '*/' ;
+
+natSpec
+  : NatSpecSingleLineComment | NatSpecMultilineComment ;
+
 contractDefinition
   : 'abstract'? ( 'contract' | 'interface' | 'library' ) identifier
     ( 'is' inheritanceSpecifier (',' inheritanceSpecifier )* )?
@@ -51,7 +79,7 @@ contractPart
   | enumDefinition ;
 
 stateVariableDeclaration
-  : typeName
+  : natSpec? typeName
     ( PublicKeyword | InternalKeyword | PrivateKeyword | ConstantKeyword | overrideSpecifier )*
     identifier ('=' expression)? ';' ;
 
@@ -59,11 +87,11 @@ usingForDeclaration
   : 'using' identifier 'for' ('*' | typeName) ';' ;
 
 structDefinition
-  : 'struct' identifier
+  : natSpec? 'struct' identifier
     '{' ( variableDeclaration ';' (variableDeclaration ';')* )? '}' ;
 
 modifierDefinition
-  : 'modifier' identifier parameterList? ( VirtualKeyword | overrideSpecifier )* block ;
+  : natSpec? 'modifier' identifier parameterList? ( VirtualKeyword | overrideSpecifier )* block ;
 
 modifierInvocation
   : identifier ( '(' expressionList? ')' )? ;
