@@ -3,6 +3,9 @@
 [[  🌐  ](https://diligence.consensys.net/?utm_source=github_npm&utm_medium=banner&utm_campaign=solidity-antlr-grammar)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.github.io/diligence/)]
 </sup><br/><br/>
 
+# This repo is now deprecated. The grammar is now maintained by the Solidity team @ https://github.com/ConsenSys/solidity-antlr4/blob/master/Solidity.g4
+
+❤️
 
 # solidity-antlr4
 
