@@ -33,8 +33,36 @@ importDirective
   | 'import' ('*' | identifier) ('as' identifier)? 'from' StringLiteralFragment ';'
   | 'import' '{' importDeclaration ( ',' importDeclaration )* '}' 'from' StringLiteralFragment ';' ;
 
+fragment
+NatSpecKeyword
+  : '@'
+  ( 'title'
+  | 'author'
+  | 'notice'
+  | 'dev'
+  | 'param'
+  | 'return'
+  ) ;
+
+fragment
+NatSpecLineBreak
+  : [\r\n]? ;
+
+fragment
+NatSpecLineSpace
+  : [ \t*]* ;
+
+NatSpecSingleLineComment
+  : (NatSpecLineSpace '///' ~[\r\n]* [\r\n]?) + ;
+
+NatSpecMultilineComment
+  : '/**' NatSpecLineBreak (NatSpecLineSpace NatSpecKeyword .+? NatSpecLineBreak)* '*/' ;
+
+natSpec
+  : NatSpecSingleLineComment | NatSpecMultilineComment ;
+
 contractDefinition
-  : 'abstract'? ( 'contract' | 'interface' | 'library' ) identifier
+  : natSpec? 'abstract'? ( 'contract' | 'interface' | 'library' ) identifier
     ( 'is' inheritanceSpecifier (',' inheritanceSpecifier )* )?
     '{' contractPart* '}' ;
 
@@ -51,7 +79,7 @@ contractPart
   | enumDefinition ;
 
 stateVariableDeclaration
-  : typeName
+  : natSpec? typeName
     ( PublicKeyword | InternalKeyword | PrivateKeyword | ConstantKeyword | overrideSpecifier )*
     identifier ('=' expression)? ';' ;
 
@@ -59,17 +87,17 @@ usingForDeclaration
   : 'using' identifier 'for' ('*' | typeName) ';' ;
 
 structDefinition
-  : 'struct' identifier
+  : natSpec? 'struct' identifier
     '{' ( variableDeclaration ';' (variableDeclaration ';')* )? '}' ;
 
 modifierDefinition
-  : 'modifier' identifier parameterList? ( VirtualKeyword | overrideSpecifier )* block ;
+  : natSpec? 'modifier' identifier parameterList? ( VirtualKeyword | overrideSpecifier )* block ;
 
 modifierInvocation
   : identifier ( '(' expressionList? ')' )? ;
 
 functionDefinition
-  : functionDescriptor parameterList modifierList returnParameters? ( ';' | block ) ;
+  : natSpec? functionDescriptor parameterList modifierList returnParameters? ( ';' | block ) ;
 
 functionDescriptor
   : 'function' identifier?
@@ -85,7 +113,7 @@ modifierList
     | PublicKeyword | InternalKeyword | PrivateKeyword | VirtualKeyword | overrideSpecifier )* ;
 
 eventDefinition
-  : 'event' identifier eventParameterList AnonymousKeyword? ';' ;
+  : natSpec? 'event' identifier eventParameterList AnonymousKeyword? ';' ;
 
 enumValue
   : identifier ;
